@@ -7,7 +7,7 @@ tags:
   d: &size 32
   b: &batch_size 32  # batch_per_process
   e: &max_num_epochs 80
-  s: &num_steps 1
+  s: &num_steps 250
 trainer:
   accelerator: auto
   strategy: auto
