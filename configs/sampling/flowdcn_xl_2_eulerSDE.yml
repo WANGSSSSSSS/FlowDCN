@@ -55,7 +55,7 @@ trainer:
   barebones: false
   sync_batchnorm: false
   reload_dataloaders_every_n_epochs: 1
-  default_root_dir:  /home/shuaiou.ws/deadit/FlowDCN/debug
+  default_root_dir: null
 model:
   vae:
     class_path: src.utils.vae.LatentVAE
@@ -99,10 +99,10 @@ model:
       lr: 1e-4
       weight_decay: 0.00
   lr_scheduler: null
-  vae_path:  /home/shuaiou.ws/SiT/vae-ema/models--stabilityai--sd-vae-ft-ema/snapshots/f04b2c4b98319346dad8c65879f680b1997b204a
-  denoiser_path: ../vis/e200_xl.ckpt
+  vae_path:  stabilityai/sd-vae-ft-ema
+  denoiser_path: null # TODO: paste your path here
   precompute_metric_data: null
-  save_dir: debug3
+  save_dir: sde
 data:
   train_root: /data/wangshuai/start/deadit/data
   test_gen_root: data/imagenet/train
