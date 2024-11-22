@@ -24,14 +24,17 @@ Our Models consistently has fewer parameters and GFLOPS compared to Transformer 
 
 ![caps](./figs/vis_ode.png)
 
-## Linear-Multi-step Solver
-We also provide a adams-like linear-multi-step solver for the recitified flow sampling. 
+## Linear-Multi-step Solvers and NeuralSolvers
+We also provide a adams-like linear-multi-step solver for the recitified flow sampling. The related configs are named with `adam2` or `adam4`. The solver code are placed in `./src/diffusion/flow_matching/adam_sampling.py`.
 
 Compared to Henu/RK4, the linear-multi-step solver is more stable and faster.
 
 During some experiments, we supringly find that the linear-multi-step solver can achieve comparable results even with FlowTurbo.
 
 As they are distinct methods, so armed with Adams, we believe FlowTurbo can be more powerful.
+
+Also, We provide some magic solvers for the recitified flow sampling. These solvers are highly inspired by linear-multi-steps methods, and consists of just some **Magic Numbers**
+These solvers are really powerful and interesting. We place the related code in `./src/diffusion/flow_matching/ns_sampling.py`.
 
 | SiT-XL-R256 | Steps | NFE-CFG  | Extra-Paramters | FID  | IS    | PR   | Recall |
 |-------------|-------|----------|-----------------|------|-------|------|--------|
@@ -46,3 +49,22 @@ As they are distinct methods, so armed with Adams, we believe FlowTurbo can be m
 | FlowTurbo   | 8     | (8+2)x2  | 30408704(29M)   | 3.63 | /     | /    | /      |
 | FlowTurbo   | 10    | (12+2)x2 | 30408704(29M)   | 2.69 | /     | /    | /      |
 | FlowTurbo   | 15    | (17+3)x2 | 30408704(29M)   | 2.22 | 248   | 0.81 | 0.60   |
+| ours        | 6     | 6x2      | 21              | 3.57 | 214   | 0.77 | 0.58   |
+| ours        | 7     | 7x2      | 28              | 2.78 | 229   | 0.79 | 0.60   |
+| ours        | 8     | 8x2      | 36              | 2.65 | 234   | 0.79 | 0.60   |
+| ours        | 10    | 10x2     | 55              | 2.40 | 238   | 0.79 | 0.60   |
+| ours        | 15    | 15x2     | 110              | 2.24 | 244   | 0.80 | 0.60   |
+
+## Citation
+```bibtex
+@inproceedings{
+wang2024exploring,
+title={Exploring {DCN}-like architecture for fast image generation with arbitrary resolution},
+author={Shuai Wang and Zexian Li and Tianhui Song and Xubin Li and Tiezheng Ge and Bo Zheng and Limin Wang},
+booktitle={The Thirty-eighth Annual Conference on Neural Information Processing Systems},
+year={2024},
+url={https://openreview.net/forum?id=e57B7BfA2B}
+}
+```
+
+
