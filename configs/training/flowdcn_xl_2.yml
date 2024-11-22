@@ -13,7 +13,7 @@ trainer:
   strategy: auto
   devices: 0,
   num_nodes: 1
-  precision: 16-true
+  precision: 32-true
   logger: null
   callbacks:
     - src.utils.callbacks.DummyCheckpointHook
