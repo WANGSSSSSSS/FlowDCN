@@ -86,15 +86,11 @@ class EulerSampler(BaseSampler):
         return x
 
 
-class HenuSampler(BaseSampler):
+class HeunSampler(BaseSampler):
     def __init__(
             self,
-            num_steps: int = 250,
-            guidance=4.0,
             scheduler: BaseScheduler = None,
             w_scheduler: BaseScheduler = None,
-            guidance_fn: Callable = c3_guidance_fn,
-            pred_eps=False,
             exact_henu=False,
             step_fn: Callable = ode_step_fn,
             last_step=None,
@@ -104,10 +100,6 @@ class HenuSampler(BaseSampler):
     ):
         super().__init__(*args, **kwargs)
         self.scheduler = scheduler
-        self.num_steps = num_steps
-        self.pred_eps = pred_eps
-        self.guidance = guidance
-        self.guidance_fn = guidance_fn
         self.exact_henu = exact_henu
         self.step_fn = step_fn
         self.last_step = last_step
@@ -139,16 +131,11 @@ class HenuSampler(BaseSampler):
             dt = t_next - t_cur
             t_cur = t_cur.repeat(batch_size)
             sigma = self.scheduler.sigma(t_cur)
-            drift_coeff = self.scheduler.drift_coefficient(t_cur)
-            diffusion_coeff = self.scheduler.diffuse_coefficient(t_cur)
             alpha_over_dalpha = 1/self.scheduler.dalpha_over_alpha(t_cur)
             dsigma_mul_sigma = self.scheduler.dsigma_mul_sigma(t_cur)
-
             t_hat = t_next
             t_hat = t_hat.repeat(batch_size)
             sigma_hat = self.scheduler.sigma(t_hat)
-            drift_coeff_hat = self.scheduler.drift_coefficient(t_hat)
-            diffusion_coeff_hat = self.scheduler.diffuse_coefficient(t_hat)
             alpha_over_dalpha_hat = 1 / self.scheduler.dalpha_over_alpha(t_hat)
             dsigma_mul_sigma_hat = self.scheduler.dsigma_mul_sigma(t_hat)
 
@@ -161,13 +148,8 @@ class HenuSampler(BaseSampler):
                 t_cur = t_cur.repeat(2)
                 out = net(cfg_x, t_cur, labels)
                 out = self.guidance_fn(out, self.guidance)
-
-                if self.pred_eps:
-                    s = out / sigma
-                    v = drift_coeff * x + diffusion_coeff * s
-                else:
-                    v = out
-                    s = ((alpha_over_dalpha)*v - x)/(sigma**2 - (alpha_over_dalpha)*dsigma_mul_sigma)
+                v = out
+                s = ((alpha_over_dalpha)*v - x)/(sigma**2 - (alpha_over_dalpha)*dsigma_mul_sigma)
             else:
                 v = v_hat
                 s = s_hat
@@ -178,12 +160,8 @@ class HenuSampler(BaseSampler):
                 t_hat = t_hat.repeat(2)
                 out = net(cfg_x_hat, t_hat, labels)
                 out = self.guidance_fn(out, self.guidance)
-                if self.pred_eps:
-                    s_hat = out / sigma_hat
-                    v_hat = drift_coeff_hat * x_hat + diffusion_coeff_hat * s_hat
-                else:
-                    v_hat = out
-                    s_hat = ((alpha_over_dalpha_hat)* v_hat - x_hat) / (sigma_hat ** 2 - (alpha_over_dalpha_hat) * dsigma_mul_sigma_hat)
+                v_hat = out
+                s_hat = ((alpha_over_dalpha_hat)* v_hat - x_hat) / (sigma_hat ** 2 - (alpha_over_dalpha_hat) * dsigma_mul_sigma_hat)
                 v = (v + v_hat) / 2
                 s = (s + s_hat) / 2
                 x = self.step_fn(x, v, dt, s=s, w=w)
