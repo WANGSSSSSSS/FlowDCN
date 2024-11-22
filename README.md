@@ -26,9 +26,10 @@ Our code also support LogNorm and VAR(Various Aspect Ratio Training)
 
 ![caps](./figs/vis_ode.png)
 
-### Various Resolution Extension
+[//]: # (### Various Resolution Extension)
 
-![caps](./figs/var_fid.png)
+[//]: # ()
+[//]: # (![caps]&#40;./figs/var_fid.png&#41;)
 
 ## Linear-Multi-step Solvers and NeuralSolvers
 We also provide a adams-like linear-multi-step solver for the recitified flow sampling. The related configs are named with `adam2` or `adam4`. The solver code are placed in `./src/diffusion/flow_matching/adam_sampling.py`.
