@@ -9,20 +9,26 @@ Our Models consistently achieve state-of-the-art results on the sFID metrics com
 
 ### Metrics 
 Our Models consistently has fewer parameters and GFLOPS compared to Transformer counterparts. 
+Our code also support LogNorm and VAR(Various Aspect Ratio Training)
 
-|   Model-iters   | Resolution |    Solver    | NFE-CFG | FID  | sFID | Params |Link|
-|:---------------:|:----------:|:------------:|:-------:|:----:|:----:|:------:|:--:|
-| FlowDCN-S-400k  |  256x256   | EulerSDE-250 |  250x2  | 54.6 | 8.8  | 30.3M  |
-| FlowDCN-B-400k  |  256x256   | EulerSDE-250 |  250x2  | 28.5 | 6.09 |  120M  |
-| FlowDCN-L-400k  |  256x256   | EulerSDE-250 |  250x2  | 13.8 | 4.69 |  421M  |
-|  FlowDCN-XL-2M  |  256x256   | EulerODE-250 |  250x2  | 2.01 | 4.33 |  618M  |
-|  FlowDCN-XL-2M  |  256x256   | EulerSDE-250 |  250x2  | 2.00 | 4.37 |  618M  |
-| FlowDCN-XL-100k |  512x512   | EulerODE-50  |  50x2   | 2.76 | 5.29 |  618M  |
-| FlowDCN-XL-100k |  512x512   | EulerSDE-250 |  250x2  | 2.44 | 4.53 |  618M  |
+|    Model-iters     | Resolution |    Solver    | NFE-CFG | FID  | sFID | Params |Link|
+|:------------------:|:----------:|:------------:|:-------:|:----:|:----:|:------:|:--:|
+|   FlowDCN-S-400k   |  256x256   | EulerSDE-250 |  250x2  | 54.6 | 8.8  | 30.3M  |
+|   FlowDCN-B-400k   |  256x256   | EulerSDE-250 |  250x2  | 28.5 | 6.09 |  120M  |
+| VAR-FlowDCN-B-400k |  256x256   | EulerSDE-250 |  250x2  | 23.6 | 7.72 |  120M  |
+|   FlowDCN-L-400k   |  256x256   | EulerSDE-250 |  250x2  | 13.8 | 4.69 |  421M  |
+|   FlowDCN-XL-2M    |  256x256   | EulerODE-250 |  250x2  | 2.01 | 4.33 |  618M  |
+|   FlowDCN-XL-2M    |  256x256   | EulerSDE-250 |  250x2  | 2.00 | 4.37 |  618M  |
+|  FlowDCN-XL-100k   |  512x512   | EulerODE-50  |  50x2   | 2.76 | 5.29 |  618M  |
+|  FlowDCN-XL-100k   |  512x512   | EulerSDE-250 |  250x2  | 2.44 | 4.53 |  618M  |
 
 ### Visualizations
 
 ![caps](./figs/vis_ode.png)
+
+### Various Resolution Extension
+
+![caps](./figs/var_fid.png)
 
 ## Linear-Multi-step Solvers and NeuralSolvers
 We also provide a adams-like linear-multi-step solver for the recitified flow sampling. The related configs are named with `adam2` or `adam4`. The solver code are placed in `./src/diffusion/flow_matching/adam_sampling.py`.
