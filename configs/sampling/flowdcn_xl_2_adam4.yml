@@ -1,0 +1,134 @@
+# lightning.pytorch==2.2.1
+seed_everything: true
+torch_hub_dir: null
+huggingface_cache_dir: null
+tags:
+  exp: FlowDCN_XL_2_Adam4
+  d: &size 32
+  b: &batch_size 32  # batch_per_process
+  e: &max_num_epochs 80
+  s: &num_steps 10
+trainer:
+  accelerator: auto
+  strategy: auto
+  devices: 0,
+  num_nodes: 1
+  precision: 32-true
+  logger: null
+  callbacks:
+    - src.utils.callbacks.DummyCheckpointHook
+    - class_path: src.utils.callbacks.EMA
+      init_args:
+        decay: 0.9999
+    - class_path: lightning.pytorch.callbacks.model_checkpoint.ModelCheckpoint
+      init_args:
+        every_n_epochs: 1
+        save_top_k: -1
+    - class_path: src.utils.callbacks.GradientMonitor
+  fast_dev_run: null
+  max_epochs: *max_num_epochs
+  min_epochs: null
+  max_steps: -1
+  min_steps: null
+  max_time: null
+  limit_train_batches: null
+  limit_val_batches: null
+  limit_test_batches: null
+  limit_predict_batches: null
+  overfit_batches: 0.0
+  val_check_interval: null
+  check_val_every_n_epoch: 20
+  num_sanity_val_steps: null
+  log_every_n_steps: null
+  enable_checkpointing: null
+  enable_progress_bar: null
+  enable_model_summary: null
+  accumulate_grad_batches: 1
+  gradient_clip_val: null
+  gradient_clip_algorithm: null
+  deterministic: null
+  benchmark: null
+  inference_mode: true
+  use_distributed_sampler: false
+  profiler: null
+  detect_anomaly: false
+  barebones: false
+  sync_batchnorm: false
+  reload_dataloaders_every_n_epochs: 1
+  default_root_dir:  /home/shuaiou.ws/deadit/FlowDCN/debug
+model:
+  vae:
+    class_path: src.utils.vae.LatentVAE
+    init_args:
+      precompute: false
+  denoiser:
+    class_path: src.models.flowdcn.FlowDCN
+    init_args:
+      input_size: 32
+      patch_size: 2
+      in_channels: 4
+      num_groups: 16
+      hidden_size: 1152
+      num_blocks: 28
+      num_classes: &num_classes 1000
+      learn_sigma: true
+  metric:
+    class_path: src.utils.metrics.UnifiedMetric
+    init_args:
+      enabled_metrics:
+        - fid
+        - sfid
+  diffusion_trainer:
+    class_path: src.diffusion.flow_matching.training.FlowMatchingTrainer
+    init_args:
+      scheduler: &scheduler src.diffusion.flow_matching.scheduling.LinearScheduler
+  diffusion_sampler:
+    class_path: src.diffusion.flow_matching.adam_sampling.AdamLMSampler
+    init_args:
+      order: 4
+      scheduler: *scheduler
+      null_class: *num_classes
+      w_scheduler: src.diffusion.flow_matching.scheduling.LinearScheduler
+      step_fn: src.diffusion.flow_matching.sampling.sde_step_fn
+      guidance_fn: src.diffusion.base.guidance.simple_guidance_fn
+      num_steps: *num_steps
+      guidance: 4
+  optimizer:
+    class_path: torch.optim.AdamW
+    init_args:
+      lr: 1e-4
+      weight_decay: 0.00
+  lr_scheduler: null
+  vae_path:  /home/shuaiou.ws/SiT/vae-ema/models--stabilityai--sd-vae-ft-ema/snapshots/f04b2c4b98319346dad8c65879f680b1997b204a
+  denoiser_path: ../vis/e200_xl.ckpt
+  precompute_metric_data: null
+  save_dir: debug3
+data:
+  train_root: /data/wangshuai/start/deadit/data
+  test_gen_root: data/imagenet/train
+  test_nature_root: workdirs_debug_res
+  train_batch_size: *batch_size
+  train_num_workers: 4
+  train_prefetch_factor: 8
+  train_dataset: imagenet_nebu
+  train_image_size: *size
+  eval_batch_size: *batch_size
+  eval_num_workers: 4
+  eval_max_num_instances: 10000  # fid10k
+  eval_seeds: null
+  eval_selected_classes: null
+  pred_batch_size: 2
+  pred_num_workers: 2
+  pred_seeds: 0,1,2,3
+  pred_selected_classes:
+    - 64
+  test_batch_size: 32
+  test_num_workers: 16
+  test_image_size:
+    - 256
+    - 256
+  num_classes: *num_classes
+  latent_shape:
+    - 4
+    - 32
+    - 32
