@@ -11,16 +11,18 @@ Our Models consistently achieve state-of-the-art results on the sFID metrics com
 Our Models consistently has fewer parameters and GFLOPS compared to Transformer counterparts. 
 Our code also support LogNorm and VAR(Various Aspect Ratio Training)
 
-|    Model-iters     | Resolution |    Solver    | NFE-CFG | FID  | sFID | Params |Link|
-|:------------------:|:----------:|:------------:|:-------:|:----:|:----:|:------:|:--:|
-|   FlowDCN-S-400k   |  256x256   | EulerSDE-250 |  250x2  | 54.6 | 8.8  | 30.3M  |
-|   FlowDCN-B-400k   |  256x256   | EulerSDE-250 |  250x2  | 28.5 | 6.09 |  120M  |
-| VAR-FlowDCN-B-400k |  256x256   | EulerSDE-250 |  250x2  | 23.6 | 7.72 |  120M  |
-|   FlowDCN-L-400k   |  256x256   | EulerSDE-250 |  250x2  | 13.8 | 4.69 |  421M  |
-|   FlowDCN-XL-2M    |  256x256   | EulerODE-250 |  250x2  | 2.01 | 4.33 |  618M  |
-|   FlowDCN-XL-2M    |  256x256   | EulerSDE-250 |  250x2  | 2.00 | 4.37 |  618M  |
-|  FlowDCN-XL-100k   |  512x512   | EulerODE-50  |  50x2   | 2.76 | 5.29 |  618M  |
-|  FlowDCN-XL-100k   |  512x512   | EulerSDE-250 |  250x2  | 2.44 | 4.53 |  618M  |
+|    Model-iters     | Resolution |     Solver      | NFE-CFG | FID  | sFID | Params |Link|
+|:------------------:|:----------:|:---------------:|:-------:|:----:|:----:|:------:|:--:|
+|   FlowDCN-S-400k   |  256x256   |  EulerSDE-250   |  250x2  | 54.6 | 8.8  | 30.3M  |
+|   FlowDCN-B-400k   |  256x256   |  EulerSDE-250   |  250x2  | 28.5 | 6.09 |  120M  |
+| VAR-FlowDCN-B-400k |  256x256   |  EulerSDE-250   |  250x2  | 23.6 | 7.72 |  120M  |
+|   FlowDCN-L-400k   |  256x256   |  EulerSDE-250   |  250x2  | 13.8 | 4.69 |  421M  |
+|   FlowDCN-XL-2M    |  256x256   |  EulerODE-250   |  250x2  | 2.01 | 4.33 |  618M  |
+|   FlowDCN-XL-2M    |  256x256   |  EulerSDE-250   |  250x2  | 2.00 | 4.37 |  618M  |
+|   FlowDCN-XL-2M    |  256x256   | NeuralSolver-10 |  10x2   | 2.35 | 5.07 |  618M  |
+|  FlowDCN-XL-100k   |  512x512   |   EulerODE-50   |  50x2   | 2.76 | 5.29 |  618M  |
+|  FlowDCN-XL-100k   |  512x512   |  EulerSDE-250   |  250x2  | 2.44 | 4.53 |  618M  |
+|  FlowDCN-XL-100k   |  512x512   | NeuralSolver-10 |  10x2   | 2.77 | 4.68 |  618M  |
 
 ### Visualizations
 
